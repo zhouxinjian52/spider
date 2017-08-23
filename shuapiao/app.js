@@ -75,11 +75,15 @@ function spider() {
                 SUCCESS++;
             }
             console.error('成功刷了：' + SUCCESS + '次')
-            sleep(Math.ceil(Math.random()*1000));
+            
             if (body == 107) {
                 sleep(Math.ceil(Math.random()*15000));
+                spiderSet();
+            }else{
+                sleep(Math.ceil(Math.random()*1000+400));
+                spiderSet();
             }
-            spiderSet();
+            
         })
     }).on('error', function(err) {
         console.error("err:" + err);
