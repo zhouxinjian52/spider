@@ -53,49 +53,60 @@ function sleep(numberMillis) {
     }
 }
 
-function spider() {
-    options.headers['Cookie'] = "PHPSESSID=o4i2qmhs9ekjpvk3q9por2sn22; wxd_openid=Eioa5C5oj3S32qhH; dzp_openid=Eioa5C5oj3S32qhH"
+// function spider() {
+//     options.headers['Cookie'] = "PHPSESSID=o4i2qmhs9ekjpvk3q9por2sn22; wxd_openid=Eioa5C5oj3S32qhH; dzp_openid=Eioa5C5oj3S32qhH"
 
-    // console.log("got response: " + res.statusCode);
-    // console.log("body:" + body);
-    const postData = querystring.stringify({
-        zid: 149,
-        vid: 13,
-        token: 'Eioa5C5oj3S32qhH',
-        // __hash__: $('input[name="__hash__"]').val(),
-        // tttid: $('input[name="tttid"]').val()
-    });
+//     // console.log("got response: " + res.statusCode);
+//     // console.log("body:" + body);
+//     const postData = querystring.stringify({
+//         zid: 149,
+//         vid: 13,
+//         token: 'Eioa5C5oj3S32qhH',
+//         // __hash__: $('input[name="__hash__"]').val(),
+//         // tttid: $('input[name="tttid"]').val()
+//     });
 
-    const req = http.request(options, function(res) {
-        console.log("got response: " + res.statusCode);
-        console.log(res.headers['set-cookie']);
-        res.on('data', function(body) {
-            console.error("body:" + body);
-            if (body == 108) {
-                SUCCESS++;
-            }
-            console.error('成功刷了：' + SUCCESS + '次')
-            
-            if (body == 107) {
-                sleep(Math.ceil(Math.random()*15000));
-                spiderSet();
-            }else{
-                sleep(Math.ceil(Math.random()*1000+400));
-                spiderSet();
-            }
-            
-        })
-    }).on('error', function(err) {
-        console.error("err:" + err);
-        console.log('error');
-        sleep(1000);
-        spiderSet();
-    })
+//     const req = http.request(options, function(res) {
+//         console.log('------------------');
+//         console.log("got response: " + res.statusCode);
+//         console.log(res.headers['set-cookie']);
+//         res.on('data', function(body) {
+//             console.error("body:" + body);
+//             if (body == 108) {
+//                 SUCCESS++;
+//             }
+//             console.error('成功刷了：' + SUCCESS + '次')
 
-    // 写入数据到请求主体
-    req.write(postData);
-    req.end();
-}
+//             if (body == 107) {
+//                 sleep(Math.ceil(Math.random() * 15000));
+//                 spider();
+//             } else {
+
+//                 const myDate = new Date();
+//                 const getHours = myDate.getHours();
+//                 console.log('当前时间为：' + getHours + '点');
+//                 if (getHours <= 5) {
+//                     console.log('凌晨5点内')
+//                     sleep(Math.ceil(Math.random() * 20000));
+//                 } else {
+//                     console.log('不在凌晨5点内')
+//                     sleep(Math.ceil(Math.random() * 1000));
+//                 }
+//                 spider();
+//             }
+
+//         })
+//     }).on('error', function(err) {
+//         console.error("err:" + err);
+//         console.log('error');
+//         sleep(1000);
+//         spider();
+//     })
+
+//     // 写入数据到请求主体
+//     req.write(postData);
+//     req.end();
+// }
 
 function spiderSet(req, res) {
     proxiedRequest
@@ -114,6 +125,7 @@ function spiderSet(req, res) {
             var $ = cheerio.load(html);
 
             const cookies = res.headers['set-cookie'][0].split(';')[0].split('=')[1];
+            console.log('-----------------------------');
             console.log(cookies);
 
             options.headers['Cookie'] = "PHPSESSID=" + cookies + "; wxd_openid=Eioa5C5oj3S32qhH; dzp_openid=Eioa5C5oj3S32qhH"
@@ -129,6 +141,7 @@ function spiderSet(req, res) {
             });
 
             const req = http.request(options, function(res) {
+
                 console.log("got response: " + res.statusCode);
                 console.log(res.headers['set-cookie']);
                 res.on('data', function(body) {
@@ -137,13 +150,33 @@ function spiderSet(req, res) {
                         SUCCESS++;
                     }
                     console.error('成功刷了：' + SUCCESS + '次')
-                    sleep(100);
-                    spiderSet();
+
+                    if (body == 107) {
+                        sleep(Math.ceil(Math.random() * 25000));
+                        spiderSet();
+                    } else {
+
+                        const myDate = new Date();
+                        const getHours = myDate.getHours();
+                        console.log('当前时间为：' + getHours + '点');
+                        if (getHours <= 5) {
+                            console.log('凌晨5点内')
+                            sleep(Math.ceil(Math.random() * 25000));
+                        } else if (getHours >= 22) {
+                            console.log('晚上10点后')
+                            sleep(Math.ceil(Math.random() * 10000));
+                        } else {
+                            console.log('不在凌晨5点内')
+                            sleep(Math.ceil(Math.random() * 2000));
+                        }
+                        spiderSet();
+                    }
+
                 })
             }).on('error', function(err) {
                 console.error("err:" + err);
                 console.log('error');
-                sleep(100);
+                sleep(1000);
                 spiderSet();
             })
 
@@ -161,7 +194,7 @@ if (cluster.isMaster) {
     console.log(111111111);
     // Fork workers.
     for (var i = 0; i < numCPUs; i++) {
-        sleep(Math.ceil(Math.random()*1000)+300);
+        sleep(Math.ceil(Math.random() * 1000) + 300);
         cluster.fork();
     }
     var i = numCPUs;
@@ -173,6 +206,6 @@ if (cluster.isMaster) {
     });
 } else {
     console.log(22222222222);
-    spider();
+    spiderSet();
     // process.exit(0);
 }
