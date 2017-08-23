@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>汽车之家车辆爬取结果展示</title>
+</head>
+
+<body>
+    <div id="container" style="min-width:400px;height:400px;"></div>
+<!--     <h4 class="toolong"><a href="http://www.autohome.com.cn/1004/#levelsource=000000000_0&pvareaid=101594">smart forfour</a></h4>
+    <div>指导价：<a class="red" href="http://www.autohome.com.cn/1004/price.html#pvareaid=101446">13.50-18.60万</a></div>
+    <div><a href="http://car.autohome.com.cn/price/series-1004.html#pvareaid=103446">报价</a> <a id="atk_1004" hre f="http://car.autohome.com.cn/pic/series/1004.html#pvareaid=103448">图库</a>
+        <sp an id="spt_1004" class="text-through" href="http://www.che168.com/china/series1004/">二手车</span> <a href="http://club.autohome.com.cn/bbs/forum-c-1004-1.html#pvareaid=103447">论坛</a> <a href="http://k.autohome.com.cn/1004/#pvareaid=103459">口碑</a></div> -->
+    <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+    <script>
+    var chart = new Highcharts.Chart('container', {
+        chart: {
+            type: 'bar' //指定图表的类型，默认是折线图（line）
+        },
+        title: {
+            text: '我的第一个图表' //指定图表标题
+        },
+        xAxis: {
+            categories: ['苹果', '香蕉', '橙子'] //指定x轴分组
+        },
+        yAxis: {
+            title: {
+                text: '吃水果个数' //指定y轴的标题
+            }
+        },
+        series: [{ //指定数据列
+            name: '小明', //数据列名
+            data: [1, 0, 4] //数据
+        }, {
+            name: '小红',
+            data: [5, 7, 3]
+        }]
+    });
+    </script>
+</body>
+
+</html>
